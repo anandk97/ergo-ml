@@ -34,7 +34,10 @@ r_middle_total_force = (np.round(np.sum(right_hand_force[:,10:13], axis=1)*4.448
 r_ring_total_force = (np.round(np.sum(right_hand_force[:,13:16], axis=1)*4.44822, 2))
 r_little_total_force = (np.round(np.sum(right_hand_force[:,16:19], axis=1)*4.44822, 2))
 
-
+l_hand_data = [l_palm_total_force,l_thumb_total_force,l_index_total_force,l_middle_total_force,l_ring_total_force,l_little_total_force]
+l_hand_total_force = l_palm_total_force + l_thumb_total_force + l_index_total_force + l_middle_total_force + l_ring_total_force + l_little_total_force
+r_hand_data = [r_palm_total_force,r_thumb_total_force,r_index_total_force,r_middle_total_force,r_ring_total_force,r_little_total_force]
+r_hand_total_force = r_palm_total_force + r_thumb_total_force + r_index_total_force + r_middle_total_force + r_ring_total_force + r_little_total_force
 #%% Define Functions
 def continuous_windowed_frequency(time,hand_data,window_length,finger_threshold,overall_threshold):
     F_list = []
@@ -141,4 +144,4 @@ df.interpolate(method='linear',inplace=True)
 # Round data to 2 decimal places
 df = df.round(3)
 # df.to_csv(filename + '_w_HAL_25Hz.csv',index=False)
-df.to_csv('C:\Users\anand\Desktop\test.csv',index=False)
+df.to_csv(r'C:\Users\anand\Desktop\test.csv',index=False)
