@@ -13,6 +13,7 @@ data_fps = 60 # The data was interpolated to 60 fps
 participant_id = 1
 tool_id = 1
 trial_id = 1
+file_name = r'C:\Users\anand\Desktop\HAL Labelled Data\p'+str(participant_id)+" tool"+str(tool_id)+" trial"+str(trial_id)+' w lr HAL.csv'
 left_hand_force = np.load(r"C:\Users\anand\Desktop\Hand-intensive Manufacturing Processes Dataset\p"+str(participant_id)+" tool"+str(tool_id)+" trial"+str(trial_id)+"\processed force_detail_l.npy")
 right_hand_force = np.load(r"C:\Users\anand\Desktop\Hand-intensive Manufacturing Processes Dataset\p"+str(participant_id)+" tool"+str(tool_id)+" trial"+str(trial_id)+"\processed force_detail_r.npy")
 # The 19 hand regions are listed in order as follows: 
@@ -133,15 +134,18 @@ df = pd.DataFrame({'Time (s)':time,'Left Palm Force (N)':l_palm_total_force,'Lef
 # Convert time to datetime format
 # date_time = pd.to_datetime(time,unit='s')
 # df['Time (s)'] = date_time
-plt.plot(df['Time (s)'],df['Left HAL'])
+# plt.plot(df['Time (s)'],df['Left HAL'])
 # plt.show()
 
 df['Time (s)'] = np.linspace(time[0],time[-1],len(df))
-plt.figure()
-plt.plot(df['Time (s)'],df['Left HAL'])
+# plt.figure()
+# plt.plot(df['Time (s)'],df['Right HAL'])
 # plt.show()
 df.interpolate(method='linear',inplace=True)
 # Round data to 2 decimal places
 df = df.round(3)
 # df.to_csv(filename + '_w_HAL_25Hz.csv',index=False)
-df.to_csv(r'C:\Users\anand\Desktop\test.csv',index=False)
+# Save the data to a csv file
+df.to_csv(file_name,index=False)
+
+# df.to_csv(file_name,index=False)

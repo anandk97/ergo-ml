@@ -5,11 +5,15 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-initial_angle = -25
-data = pd.read_csv(r"C:\Users\anand\Desktop\RULA\Data from og_barc\p1\tool1 trial1\processed p1 tool1 trial1 bodypose.csv",header=None)
-gonio_data = pd.read_csv(r"C:\Users\anand\Desktop\RULA\Data from og_barc\p1\tool1 trial1\processed p1 tool1 trial1 gonio.csv",header=None)
-# file_name = r'C:\Users\anand\Desktop\RULA\Labelled angle compensated data\old_data_w_lr_rula.csv'
-file_name = r'C:\Users\anand\Desktop\RULA\Labelled angle compensated data\p1_t1_trial1_w_lr_RULA.csv'
+# initial_angle = -25
+initial_angle = 0
+participant_id = 1
+tool_id = 1
+trial_id = 1
+data = pd.read_csv(r"C:\Users\anand\Desktop\Hand-intensive Manufacturing Processes Dataset\p"+str(participant_id)+" tool"+str(tool_id)+" trial"+str(trial_id)+"\processed bodypose.csv",header=None)
+gonio_data = pd.read_csv(r"C:\Users\anand\Desktop\Hand-intensive Manufacturing Processes Dataset\p"+str(participant_id)+" tool"+str(tool_id)+" trial"+str(trial_id)+"\processed gonio.csv",header=None)
+file_name = r'C:\Users\anand\Desktop\RULA Labelled Data\p'+str(participant_id)+' tool'+str(tool_id)+' trial'+str(trial_id)+' w lr RULA.csv'
+
 # old_data = pd.read_csv(r"C:\Users\anand\Desktop\RULA\Labelled data\old_data_w_lr_RULA.csv",header=None)
 # data = old_data.iloc[:,0:54]
 # gonio_data = old_data.iloc[:,54:58]
