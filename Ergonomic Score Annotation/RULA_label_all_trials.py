@@ -862,10 +862,10 @@ def tableC_posture_score(wrist_arm_score,neck_trunk_leg_score):
 #%% Parameters
 # initial_angle = -25
 initial_angle = 0
-participant_id_range = range(1,8)
+participant_id_range = range(8,16)
 tool_id_range = range(1,3)
 trial_id_range = range(1,4)
-#%% Calculate HAL for all trials
+#%% Calculate RULA for all trials
 for participant_id in participant_id_range:
     for tool_id in tool_id_range:
         for trial_id in trial_id_range:
@@ -937,8 +937,12 @@ for participant_id in participant_id_range:
                 total_load = 15
                 leg_support = 1 # Legs are not supported
 
-
-                for i in range(len(data[0])):
+                data_length = np.min([len(data[0]),len(gonio_data[0])])
+                if len(data[0]) >len(gonio_data[0]):
+                    data = data.iloc[:data_length,:]
+                else:
+                    gonio_data = gonio_data.iloc[:data_length,:]
+                for i in range(data_length):
                     upper_arm_score = upper_arm_score_from(l_shoulder[i,:],l_elbow[i,:])
                     # Adjustment
                     if upper_arm_score > 1:
@@ -975,7 +979,7 @@ for participant_id in participant_id_range:
                     tableC_score = tableC_posture_score(wrist_arm_score, neck_trunk_leg_score)
                     
                     l_RULA_scores.append(tableC_score)
-                for i in range(len(data[0])):
+                for i in range(data_length):
                     upper_arm_score = upper_arm_score_from(r_shoulder[i,:],r_elbow[i,:])
                     # Adjustment
                     if upper_arm_score > 1:
@@ -1026,5 +1030,168 @@ for participant_id in participant_id_range:
                 data['57'] = r_gonio_2
                 data['58'] = l_RULA_scores
                 data['59'] = r_RULA_scores
-
+                data = data.round(3)
                 data.to_csv(file_name,index = False, header = False)
+            elif os.path.isfile(r"C:\Users\anand\Desktop\Hand-intensive Manufacturing Processes Dataset\Participant "+str(participant_id)+"\\tool"+str(tool_id)+" trial"+str(trial_id)+"\processed p"+str(participant_id)+" tool"+str(tool_id)+" trial"+str(trial_id)+" bodypose.csv"):
+                print("Participant "+str(participant_id)+" Tool "+str(tool_id)+" Trial "+str(trial_id))
+                data = pd.read_csv(r"C:\Users\anand\Desktop\Hand-intensive Manufacturing Processes Dataset\Participant "+str(participant_id)+"\\tool"+str(tool_id)+" trial"+str(trial_id)+"\processed p"+str(participant_id)+" tool"+str(tool_id)+" trial"+str(trial_id)+" bodypose.csv")
+                gonio_data = pd.read_csv(r"C:\Users\anand\Desktop\Hand-intensive Manufacturing Processes Dataset\Participant "+str(participant_id)+"\\tool"+str(tool_id)+" trial"+str(trial_id)+"\processed p"+str(participant_id)+" tool"+str(tool_id)+" trial"+str(trial_id)+" gonio.csv")
+                file_name = r'C:\Users\anand\Desktop\RULA Labelled Data\p'+str(participant_id)+' tool'+str(tool_id)+' trial'+str(trial_id)+' w lr RULA.csv'
+                    
+                                    
+
+                ##0-Nose 1,2-LREye 3,4-LRear 5,6-LRshoulder 7,8-LRelbow 9,
+                #10-LRwrist 11,12-LRhip, 13,14-LRknee, 15,16-LRankle, 
+                #17-Midshoulder # ForeArm,hand,FingerBase,Thumb123,
+                #Index1234,Middle1234,Ring1234,Pinky1234
+
+                # AlphaPose references
+                # Nose 0-2
+                # L-Eye 3-5
+                # R_Eye 6-8
+                # L_ear 9-11
+                # R_ear 12-14
+                # L_shoulder 15-17
+                # R_shoulder 18-20
+                # L_elbow 21-23
+                # R_elbow 24-26
+                # L_wrist 27-29
+                # R_wrist 30-32
+                # L_hip 33-35
+                # R-hip 36-38
+                # L_knee 39-41
+                # R_knee 42-44
+                # L_ankle 45-47
+                # R_ankle 48-50
+                # Mid_shoulder 51-53
+
+                # Leap References
+                # Hand joints : 54-173
+
+                # Ergopak References - 174-183
+
+                # Goniometer References - 184-188
+                # Upper Arm Score
+                l_eye = np.array(data.iloc[:,3:6])
+                r_eye = np.array(data.iloc[:,6:9])
+
+                mid_eye = (l_eye+r_eye)/2
+
+                l_shoulder = np.array(data.iloc[:,15:18])
+                r_shoulder = np.array(data.iloc[:,18:21])
+                mid_shoulder = np.array(data.iloc[:,51:54])
+
+
+                l_elbow = np.array(data.iloc[:,21:24])  
+                r_elbow = np.array(data.iloc[:,24:27]) 
+                
+                l_wrist = np.array(data.iloc[:,27:30])
+                r_wrist = np.array(data.iloc[:,30:33])
+
+                l_hip = np.array(data.iloc[:,33:36])
+                r_hip = np.array(data.iloc[:,36:39])
+
+                l_gonio_1 = np.array(gonio_data.iloc[:,0]) 
+                l_gonio_2 = np.array(gonio_data.iloc[:,1])
+                r_gonio_1 = np.array(gonio_data.iloc[:,2])
+                r_gonio_2 = np.array(gonio_data.iloc[:,3])
+
+                l_RULA_scores = []
+                r_RULA_scores = []
+                total_load = 15
+                leg_support = 1 # Legs are not supported
+
+                data_length = np.min([data.shape[0],gonio_data.shape[0]])
+                data = data.iloc[:data_length,:]
+                gonio_data = gonio_data.iloc[:data_length,:]
+                for i in range(data_length):
+                    upper_arm_score = upper_arm_score_from(l_shoulder[i,:],l_elbow[i,:])
+                    # Adjustment
+                    if upper_arm_score > 1:
+                        upper_arm_score = upper_arm_score-1 # Arm is supported\person is leaning
+
+                    lower_arm_score = lower_arm_score_from(l_shoulder[i,:], l_elbow[i,:], l_wrist[i,:])
+
+                    
+                    wrist_score,wrist_twist = wrist_score_from(l_gonio_1[i], l_gonio_2[i],initial_angle)
+
+                    
+                    tableA_score = tableA_posture_score_from(upper_arm_score, lower_arm_score, wrist_score, wrist_twist)
+                    
+                    arm_wrist_muscle_use_score = arm_wrist_muscle_use_score_from()
+                    
+                    force_load_score = force_load_score_from(total_load)
+                    
+                    wrist_arm_score = tableA_score + arm_wrist_muscle_use_score + force_load_score
+                    
+                    neck_score = neck_score_from(l_shoulder[i,:], r_shoulder[i,:],l_hip[i,:],r_hip[i,:],l_eye[i,:],r_eye[i,:])
+                    
+                    trunk_score  = trunk_score_from(l_hip[i,:], r_hip[i,:], mid_shoulder[i,:])
+                    
+                    leg_score = leg_score_from(leg_support)
+                        
+                    tableB_score = tableB_posture_score(neck_score, trunk_score, leg_score)
+                    
+                    leg_trunk_muscle_use_score = leg_trunk_muscle_use_score_from()
+                    
+                    force_load_score = force_load_score_from(total_load)
+                    
+                    neck_trunk_leg_score = tableB_score + leg_trunk_muscle_use_score + force_load_score
+                    
+                    tableC_score = tableC_posture_score(wrist_arm_score, neck_trunk_leg_score)
+                    
+                    l_RULA_scores.append(tableC_score)
+                for i in range(data_length):
+                    upper_arm_score = upper_arm_score_from(r_shoulder[i,:],r_elbow[i,:])
+                    # Adjustment
+                    if upper_arm_score > 1:
+                        upper_arm_score = upper_arm_score-1 # Arm is supported\person is leaning
+
+                    
+                    lower_arm_score = lower_arm_score_from(r_shoulder[i,:], r_elbow[i,:], r_wrist[i,:])
+
+                    
+                    
+                    wrist_score,wrist_twist = wrist_score_from(r_gonio_1[i], r_gonio_2[i],initial_angle)
+
+                    
+                    
+                    tableA_score = tableA_posture_score_from(upper_arm_score, lower_arm_score, wrist_score, wrist_twist)
+                    
+                    arm_wrist_muscle_use_score = arm_wrist_muscle_use_score_from()
+                    
+                    force_load_score = force_load_score_from(total_load)
+                    
+                    wrist_arm_score = tableA_score + arm_wrist_muscle_use_score + force_load_score
+
+                    neck_score = neck_score_from(l_shoulder[i,:], r_shoulder[i,:],l_hip[i,:],r_hip[i,:],l_eye[i,:],r_eye[i,:])
+
+                    
+                    trunk_score  = trunk_score_from(l_hip[i,:], r_hip[i,:], mid_shoulder[i,:])
+
+                    
+                    leg_score = leg_score_from(leg_support)
+
+                    
+                    
+                    tableB_score = tableB_posture_score(neck_score, trunk_score, leg_score)
+                    
+                    leg_trunk_muscle_use_score = leg_trunk_muscle_use_score_from()
+                    
+                    force_load_score = force_load_score_from(total_load)
+                    
+                    neck_trunk_leg_score = tableB_score + leg_trunk_muscle_use_score + force_load_score
+                    # neck_trunk_leg_scores.append(neck_trunk_leg_score)
+                    
+                    tableC_score = tableC_posture_score(wrist_arm_score, neck_trunk_leg_score)
+                    
+                    r_RULA_scores.append(tableC_score)
+                data['54'] = l_gonio_1
+                data['55'] = l_gonio_2
+                data['56'] = r_gonio_1
+                data['57'] = r_gonio_2
+                data['58'] = l_RULA_scores
+                data['59'] = r_RULA_scores
+                data = data.round(3)
+                data.to_csv(file_name,index = False, header = False)
+               

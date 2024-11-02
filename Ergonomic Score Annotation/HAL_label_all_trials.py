@@ -16,12 +16,9 @@ def continuous_windowed_frequency(time,hand_data,window_length,finger_threshold,
         for i in range(start_window,end_window):
             force_sum = 0
             single_finger_flag = 0
-            #for j in range(len(hand_data)):
-            for j in range(1,len(hand_data)): # Start from 1 to ignore palm data
-                hand_data[j][i] = min(hand_data[j][i],force_peak)
-                if hand_data[j][i] > 0:
-                    force_sum += hand_data[j][i] 
-                if hand_data[j][i] > finger_threshold:
+            force_sum = np.sum(hand_data[i,:])
+            for j in range(1,hand_data.shape[1]): # Start from 1 to ignore palm data
+                if hand_data[i,j] > finger_threshold:
                     single_finger_flag = 1
             if force_sum > overall_threshold or single_finger_flag == 1:
                 Exertions += 1
@@ -44,6 +41,8 @@ def non_linear_HAL(F,D):
 overall_threshold = 44.8 # 10 lbs
 finger_threshold = 15 # 3.3 lbs
 window_length = 10 # In seconds
+peak_finger_force = 44.8 # 10 lbs
+peak_palm_force = 44.8*4 # 40 lbs
 D = 75 # Duty Cycle
 #%% Import Data for a specific participant, tool, and trial
 data_fps = 60 # The data was interpolated to 60 fps
@@ -69,23 +68,34 @@ for participant_id in participant_id_range:
                 time = np.linspace(0, left_hand_force.shape[0]//data_fps, left_hand_force.shape[0])
                 # Calculate total force for each region of the left hand, convert to N, and round to 2 decimal places
                 l_palm_total_force = (np.round(np.sum(left_hand_force[:,0:3], axis=1)*4.44822, 2))
+                l_palm_total_force = np.clip(l_palm_total_force,0,peak_palm_force) 
                 l_thumb_total_force = (np.round(np.sum(left_hand_force[:,3:6], axis=1)*4.44822, 2))
+                l_thumb_total_force = np.clip(l_thumb_total_force,0,peak_finger_force)
                 l_index_total_force = (np.round(np.sum(left_hand_force[:,6:10], axis=1)*4.44822, 2))
+                l_index_total_force = np.clip(l_index_total_force,0,peak_finger_force)
                 l_middle_total_force = (np.round(np.sum(left_hand_force[:,10:13], axis=1)*4.44822, 2))
+                l_middle_total_force = np.clip(l_middle_total_force,0,peak_finger_force)
                 l_ring_total_force = (np.round(np.sum(left_hand_force[:,13:16], axis=1)*4.44822, 2))
+                l_ring_total_force = np.clip(l_ring_total_force,0,peak_finger_force)
                 l_little_total_force = (np.round(np.sum(left_hand_force[:,16:19], axis=1)*4.44822, 2))
 
                 # Calculate total force for each region of the right hand, convert to N, and round to 2 decimal places
                 r_palm_total_force = (np.round(np.sum(right_hand_force[:,0:3], axis=1)*4.44822, 2))
+                r_palm_total_force = np.clip(r_palm_total_force,0,peak_palm_force)
                 r_thumb_total_force = (np.round(np.sum(right_hand_force[:,3:6], axis=1)*4.44822, 2))
+                r_thumb_total_force = np.clip(r_thumb_total_force,0,peak_finger_force)
                 r_index_total_force = (np.round(np.sum(right_hand_force[:,6:10], axis=1)*4.44822, 2))
+                r_index_total_force = np.clip(r_index_total_force,0,peak_finger_force)
                 r_middle_total_force = (np.round(np.sum(right_hand_force[:,10:13], axis=1)*4.44822, 2))
+                r_middle_total_force = np.clip(r_middle_total_force,0,peak_finger_force)
                 r_ring_total_force = (np.round(np.sum(right_hand_force[:,13:16], axis=1)*4.44822, 2))
+                r_ring_total_force = np.clip(r_ring_total_force,0,peak_finger_force)
                 r_little_total_force = (np.round(np.sum(right_hand_force[:,16:19], axis=1)*4.44822, 2))
+                r_little_total_force = np.clip(r_little_total_force,0,peak_finger_force)
 
-                l_hand_data = [l_palm_total_force,l_thumb_total_force,l_index_total_force,l_middle_total_force,l_ring_total_force,l_little_total_force]
+                l_hand_data = np.array([l_palm_total_force,l_thumb_total_force,l_index_total_force,l_middle_total_force,l_ring_total_force,l_little_total_force]).T
                 l_hand_total_force = l_palm_total_force + l_thumb_total_force + l_index_total_force + l_middle_total_force + l_ring_total_force + l_little_total_force
-                r_hand_data = [r_palm_total_force,r_thumb_total_force,r_index_total_force,r_middle_total_force,r_ring_total_force,r_little_total_force]
+                r_hand_data = np.array([r_palm_total_force,r_thumb_total_force,r_index_total_force,r_middle_total_force,r_ring_total_force,r_little_total_force]).T
                 r_hand_total_force = r_palm_total_force + r_thumb_total_force + r_index_total_force + r_middle_total_force + r_ring_total_force + r_little_total_force
 
                 # Left Hand
