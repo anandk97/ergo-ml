@@ -150,118 +150,118 @@ for i in range(1,16):
     l_X_test_tool2,l_y_test_tool2,r_X_test_tool2,r_y_test_tool2 = create_dataset(test_data_tool2)
 
 
-    # l_sc = StandardScaler()
+    l_sc = StandardScaler()
 
-    # l_classifier = xgb.XGBClassifier(tree_method='gpu_hist',verbosity = 2,sampling_method='gradient_based',random_state=0)
+    l_classifier = xgb.XGBClassifier(tree_method='gpu_hist',verbosity = 2,sampling_method='gradient_based',random_state=0)
 
-    # l_y_train_tool1 = l_y_train_tool1-3
-    # l_y_train_tool2 = l_y_train_tool2-3
-    # param_dist = {'l_classifier__n_estimators' :[29],'l_classifier__max_depth':[6],'l_classifier__learning_rate':[0.18],'l_classifier__gamma':[0.12],'l_classifier__min_child_weight':[1],'l_classifier__max_leaves':[27]}
+    l_y_train_tool1 = l_y_train_tool1-3
+    l_y_train_tool2 = l_y_train_tool2-3
+    param_dist = {'l_classifier__n_estimators' :[29],'l_classifier__max_depth':[6],'l_classifier__learning_rate':[0.18],'l_classifier__gamma':[0.12],'l_classifier__min_child_weight':[1],'l_classifier__max_leaves':[27]}
 
-    # pipe = Pipeline(steps=[('scaler',l_sc),('l_classifier', l_classifier)]) 
+    pipe = Pipeline(steps=[('scaler',l_sc),('l_classifier', l_classifier)]) 
 
-    # grid_pipe = GridSearchCV(pipe, param_grid=param_dist, cv=5, n_jobs=-2, verbose=1,scoring='f1_weighted')
-    # # Combine training data for left hand stringer and left hand camel hump
-    # l_X_train = np.vstack((l_X_train_tool1,l_X_train_tool2))
-    # l_y_train = np.hstack((l_y_train_tool1,l_y_train_tool2))
-    # grid_pipe.fit(l_X_train, l_y_train)
-
-
-    # print(grid_pipe.best_params_) 
-    # print("Left Hand Training done for participant "+str(i))
+    grid_pipe = GridSearchCV(pipe, param_grid=param_dist, cv=5, n_jobs=-2, verbose=1,scoring='f1_weighted')
+    # Combine training data for left hand stringer and left hand camel hump
+    l_X_train = np.vstack((l_X_train_tool1,l_X_train_tool2))
+    l_y_train = np.hstack((l_y_train_tool1,l_y_train_tool2))
+    grid_pipe.fit(l_X_train, l_y_train)
 
 
-    # l_X_test_tool1 = l_X_test_tool1[~np.isnan(l_X_test_tool1).any(axis=1)]
-    # l_y_test_tool1 = l_y_test_tool1[~np.isnan(l_y_test_tool1)]
+    print(grid_pipe.best_params_) 
+    print("Left Hand Training done for participant "+str(i))
 
 
-    # l_y_pred_tool1 = grid_pipe.predict(l_X_test_tool1)
-    # l_y_pred_tool1 = l_y_pred_tool1+3
-    # # 1-3 low risk, 4-5 medium risk, 6-7 high risk
-
-    # # Report as a table for each participant left stringer and left camel hump
-    # # Create new variables for l_y_test and l_y_pred for each tool based on risk level
-    # l_y_test_risk  = np.zeros(np.shape(l_y_test_tool1))
-    # l_y_pred_risk = np.zeros(np.shape(l_y_pred_tool1))
-    # l_y_test_risk[l_y_test_tool1<=3] = 1
-    # l_y_test_risk[(l_y_test_tool1>3) & (l_y_test_tool1<=5)] = 2
-    # l_y_test_risk[l_y_test_tool1>5] = 3
-    # l_y_pred_risk[l_y_pred_tool1<=3] = 1
-    # l_y_pred_risk[(l_y_pred_tool1>3) & (l_y_pred_tool1<=5)] = 2
-    # l_y_pred_risk[l_y_pred_tool1>5] = 3
-
-    # # Report percentage accuracy based on correct risk level, true = low predicted = medium, true = low predicted = high, true = medium predicted = high, true = medium predicted = low, true = high predicted = medium, true = high predicted = low
-    # l_accurate = 0
-    # l_true_low_pred_med = 0
-    # l_true_low_pred_high = 0
-    # l_true_med_pred_high = 0
-    # l_true_med_pred_low = 0
-    # l_true_high_pred_med = 0
-    # l_true_high_pred_low = 0
-    # for idx in range(len(l_y_test_risk)):
-    #     if l_y_test_risk[idx] == l_y_pred_risk[idx]:
-    #         l_accurate += 1
-    #     elif l_y_test_risk[idx] == 1 and l_y_pred_risk[idx] == 2:
-    #         l_true_low_pred_med += 1
-    #     elif l_y_test_risk[idx] == 1 and l_y_pred_risk[idx] == 3:
-    #         l_true_low_pred_high += 1
-    #     elif l_y_test_risk[idx] == 2 and l_y_pred_risk[idx] == 3:
-    #         l_true_med_pred_high += 1
-    #     elif l_y_test_risk[idx] == 2 and l_y_pred_risk[idx] == 1:
-    #         l_true_med_pred_low += 1
-    #     elif l_y_test_risk[idx] == 3 and l_y_pred_risk[idx] == 2:
-    #         l_true_high_pred_med += 1
-    #     elif l_y_test_risk[idx] == 3 and l_y_pred_risk[idx] == 1:
-    #         l_true_high_pred_low += 1
-    # left_stringer_data[i-1,:] = [i-1,l_accurate/len(l_y_test_risk),l_true_low_pred_med/len(l_y_test_risk),l_true_low_pred_high/len(l_y_test_risk),l_true_med_pred_high/len(l_y_test_risk),l_true_med_pred_low/len(l_y_test_risk),l_true_high_pred_med/len(l_y_test_risk),l_true_high_pred_low/len(l_y_test_risk)]
+    l_X_test_tool1 = l_X_test_tool1[~np.isnan(l_X_test_tool1).any(axis=1)]
+    l_y_test_tool1 = l_y_test_tool1[~np.isnan(l_y_test_tool1)]
 
 
-    # l_X_test_tool2 = l_X_test_tool2[~np.isnan(l_X_test_tool2).any(axis=1)]
-    # l_y_test_tool2 = l_y_test_tool2[~np.isnan(l_y_test_tool2)]
+    l_y_pred_tool1 = grid_pipe.predict(l_X_test_tool1)
+    l_y_pred_tool1 = l_y_pred_tool1+3
+    # 1-3 low risk, 4-5 medium risk, 6-7 high risk
+
+    # Report as a table for each participant left stringer and left camel hump
+    # Create new variables for l_y_test and l_y_pred for each tool based on risk level
+    l_y_test_risk  = np.zeros(np.shape(l_y_test_tool1))
+    l_y_pred_risk = np.zeros(np.shape(l_y_pred_tool1))
+    l_y_test_risk[l_y_test_tool1<=3] = 1
+    l_y_test_risk[(l_y_test_tool1>3) & (l_y_test_tool1<=5)] = 2
+    l_y_test_risk[l_y_test_tool1>5] = 3
+    l_y_pred_risk[l_y_pred_tool1<=3] = 1
+    l_y_pred_risk[(l_y_pred_tool1>3) & (l_y_pred_tool1<=5)] = 2
+    l_y_pred_risk[l_y_pred_tool1>5] = 3
+
+    # Report percentage accuracy based on correct risk level, true = low predicted = medium, true = low predicted = high, true = medium predicted = high, true = medium predicted = low, true = high predicted = medium, true = high predicted = low
+    l_accurate = 0
+    l_true_low_pred_med = 0
+    l_true_low_pred_high = 0
+    l_true_med_pred_high = 0
+    l_true_med_pred_low = 0
+    l_true_high_pred_med = 0
+    l_true_high_pred_low = 0
+    for idx in range(len(l_y_test_risk)):
+        if l_y_test_risk[idx] == l_y_pred_risk[idx]:
+            l_accurate += 1
+        elif l_y_test_risk[idx] == 1 and l_y_pred_risk[idx] == 2:
+            l_true_low_pred_med += 1
+        elif l_y_test_risk[idx] == 1 and l_y_pred_risk[idx] == 3:
+            l_true_low_pred_high += 1
+        elif l_y_test_risk[idx] == 2 and l_y_pred_risk[idx] == 3:
+            l_true_med_pred_high += 1
+        elif l_y_test_risk[idx] == 2 and l_y_pred_risk[idx] == 1:
+            l_true_med_pred_low += 1
+        elif l_y_test_risk[idx] == 3 and l_y_pred_risk[idx] == 2:
+            l_true_high_pred_med += 1
+        elif l_y_test_risk[idx] == 3 and l_y_pred_risk[idx] == 1:
+            l_true_high_pred_low += 1
+    left_stringer_data[i-1,:] = [i-1,l_accurate/len(l_y_test_risk),l_true_low_pred_med/len(l_y_test_risk),l_true_low_pred_high/len(l_y_test_risk),l_true_med_pred_high/len(l_y_test_risk),l_true_med_pred_low/len(l_y_test_risk),l_true_high_pred_med/len(l_y_test_risk),l_true_high_pred_low/len(l_y_test_risk)]
 
 
-    # l_y_pred_tool2 = grid_pipe.predict(l_X_test_tool2)
-    # l_y_pred_tool2 = l_y_pred_tool2+3
-    # # 1-3 low risk, 4-5 medium risk, 6-7 high risk
+    l_X_test_tool2 = l_X_test_tool2[~np.isnan(l_X_test_tool2).any(axis=1)]
+    l_y_test_tool2 = l_y_test_tool2[~np.isnan(l_y_test_tool2)]
 
-    # # Report as a table for each participant left stringer and left camel hump
-    # # Create new variables for l_y_test and l_y_pred for each tool based on risk level
-    # l_y_test_risk  = np.zeros(np.shape(l_y_test_tool2))
-    # l_y_pred_risk = np.zeros(np.shape(l_y_pred_tool2))
-    # l_y_test_risk[l_y_test_tool2<=3] = 1
-    # l_y_test_risk[(l_y_test_tool2>3) & (l_y_test_tool2<=5)] = 2
-    # l_y_test_risk[l_y_test_tool2>5] = 3
-    # l_y_pred_risk[l_y_pred_tool2<=3] = 1
-    # l_y_pred_risk[(l_y_pred_tool2>3) & (l_y_pred_tool2<=5)] = 2
-    # l_y_pred_risk[l_y_pred_tool2>5] = 3
 
-    # # Report percentage accuracy based on correct risk level, true = low predicted = medium, true = low predicted = high, true = medium predicted = high, true = medium predicted = low, true = high predicted = medium, true = high predicted = low
-    # l_accurate = 0
-    # l_true_low_pred_med = 0
-    # l_true_low_pred_high = 0
-    # l_true_med_pred_high = 0
-    # l_true_med_pred_low = 0
-    # l_true_high_pred_med = 0
-    # l_true_high_pred_low = 0
-    # for idx in range(len(l_y_test_risk)):
-    #     if l_y_test_risk[idx] == l_y_pred_risk[idx]:
-    #         l_accurate += 1
-    #     elif l_y_test_risk[idx] == 1 and l_y_pred_risk[idx] == 2:
-    #         l_true_low_pred_med += 1
-    #     elif l_y_test_risk[idx] == 1 and l_y_pred_risk[idx] == 3:
-    #         l_true_low_pred_high += 1
-    #     elif l_y_test_risk[idx] == 2 and l_y_pred_risk[idx] == 3:
-    #         l_true_med_pred_high += 1
-    #     elif l_y_test_risk[idx] == 2 and l_y_pred_risk[idx] == 1:
-    #         l_true_med_pred_low += 1
-    #     elif l_y_test_risk[idx] == 3 and l_y_pred_risk[idx] == 2:
-    #         l_true_high_pred_med += 1
-    #     elif l_y_test_risk[idx] == 3 and l_y_pred_risk[idx] == 1:
-    #         l_true_high_pred_low += 1
+    l_y_pred_tool2 = grid_pipe.predict(l_X_test_tool2)
+    l_y_pred_tool2 = l_y_pred_tool2+3
+    # 1-3 low risk, 4-5 medium risk, 6-7 high risk
 
-    # left_camel_hump_data[i-1,:] = [i-1,l_accurate/len(l_y_test_risk),l_true_low_pred_med/len(l_y_test_risk),l_true_low_pred_high/len(l_y_test_risk),l_true_med_pred_high/len(l_y_test_risk),l_true_med_pred_low/len(l_y_test_risk),l_true_high_pred_med/len(l_y_test_risk),l_true_high_pred_low/len(l_y_test_risk)]
+    # Report as a table for each participant left stringer and left camel hump
+    # Create new variables for l_y_test and l_y_pred for each tool based on risk level
+    l_y_test_risk  = np.zeros(np.shape(l_y_test_tool2))
+    l_y_pred_risk = np.zeros(np.shape(l_y_pred_tool2))
+    l_y_test_risk[l_y_test_tool2<=3] = 1
+    l_y_test_risk[(l_y_test_tool2>3) & (l_y_test_tool2<=5)] = 2
+    l_y_test_risk[l_y_test_tool2>5] = 3
+    l_y_pred_risk[l_y_pred_tool2<=3] = 1
+    l_y_pred_risk[(l_y_pred_tool2>3) & (l_y_pred_tool2<=5)] = 2
+    l_y_pred_risk[l_y_pred_tool2>5] = 3
 
-    # print("Left Hand Testing done for participant "+str(i))
+    # Report percentage accuracy based on correct risk level, true = low predicted = medium, true = low predicted = high, true = medium predicted = high, true = medium predicted = low, true = high predicted = medium, true = high predicted = low
+    l_accurate = 0
+    l_true_low_pred_med = 0
+    l_true_low_pred_high = 0
+    l_true_med_pred_high = 0
+    l_true_med_pred_low = 0
+    l_true_high_pred_med = 0
+    l_true_high_pred_low = 0
+    for idx in range(len(l_y_test_risk)):
+        if l_y_test_risk[idx] == l_y_pred_risk[idx]:
+            l_accurate += 1
+        elif l_y_test_risk[idx] == 1 and l_y_pred_risk[idx] == 2:
+            l_true_low_pred_med += 1
+        elif l_y_test_risk[idx] == 1 and l_y_pred_risk[idx] == 3:
+            l_true_low_pred_high += 1
+        elif l_y_test_risk[idx] == 2 and l_y_pred_risk[idx] == 3:
+            l_true_med_pred_high += 1
+        elif l_y_test_risk[idx] == 2 and l_y_pred_risk[idx] == 1:
+            l_true_med_pred_low += 1
+        elif l_y_test_risk[idx] == 3 and l_y_pred_risk[idx] == 2:
+            l_true_high_pred_med += 1
+        elif l_y_test_risk[idx] == 3 and l_y_pred_risk[idx] == 1:
+            l_true_high_pred_low += 1
+
+    left_camel_hump_data[i-1,:] = [i-1,l_accurate/len(l_y_test_risk),l_true_low_pred_med/len(l_y_test_risk),l_true_low_pred_high/len(l_y_test_risk),l_true_med_pred_high/len(l_y_test_risk),l_true_med_pred_low/len(l_y_test_risk),l_true_high_pred_med/len(l_y_test_risk),l_true_high_pred_low/len(l_y_test_risk)]
+
+    print("Left Hand Testing done for participant "+str(i))
 
     # Repeat for right hand
     r_sc = StandardScaler()
@@ -369,10 +369,10 @@ for i in range(1,16):
 
     right_camel_hump_data[i-1,:] = [i-1,r_accurate/len(r_y_test_risk),r_true_low_pred_med/len(r_y_test_risk),r_true_low_pred_high/len(r_y_test_risk),r_true_med_pred_high/len(r_y_test_risk),r_true_med_pred_low/len(r_y_test_risk),r_true_high_pred_med/len(r_y_test_risk),r_true_high_pred_low/len(r_y_test_risk)]
 
-# df_l_stringer = pd.DataFrame(left_stringer_data,columns=['Participant ID','Accuracy','True Low Predicted Medium','True Low Predicted High','True Medium Predicted High','True Medium Predicted Low','True High Predicted Medium','True High Predicted Low'])
-# df_l_stringer.to_excel(r'C:\Users\anand\Desktop\left_stringer_data.xlsx',index=False)
-# df_l_camel_hump = pd.DataFrame(left_camel_hump_data,columns=['Participant ID','Accuracy','True Low Predicted Medium','True Low Predicted High','True Medium Predicted High','True Medium Predicted Low','True High Predicted Medium','True High Predicted Low'])
-# df_l_camel_hump.to_excel(r'C:\Users\anand\Desktop\left_camel_hump_data.xlsx',index=False)
+df_l_stringer = pd.DataFrame(left_stringer_data,columns=['Participant ID','Accuracy','True Low Predicted Medium','True Low Predicted High','True Medium Predicted High','True Medium Predicted Low','True High Predicted Medium','True High Predicted Low'])
+df_l_stringer.to_excel(r'C:\Users\anand\Desktop\left_stringer_data.xlsx',index=False)
+df_l_camel_hump = pd.DataFrame(left_camel_hump_data,columns=['Participant ID','Accuracy','True Low Predicted Medium','True Low Predicted High','True Medium Predicted High','True Medium Predicted Low','True High Predicted Medium','True High Predicted Low'])
+df_l_camel_hump.to_excel(r'C:\Users\anand\Desktop\left_camel_hump_data.xlsx',index=False)
 
 df_r_stringer = pd.DataFrame(right_stringer_data,columns=['Participant ID','Accuracy','True Low Predicted Medium','True Low Predicted High','True Medium Predicted High','True Medium Predicted Low','True High Predicted Medium','True High Predicted Low'])
 df_r_stringer.to_excel(r'C:\Users\anand\Desktop\right_stringer_data.xlsx',index=False)
