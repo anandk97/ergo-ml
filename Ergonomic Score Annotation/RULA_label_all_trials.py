@@ -862,7 +862,7 @@ def tableC_posture_score(wrist_arm_score,neck_trunk_leg_score):
 #%% Parameters
 # initial_angle = -25
 initial_angle = 0
-participant_id_range = range(8,16)
+participant_id_range = range(1,16)
 tool_id_range = range(1,3)
 trial_id_range = range(1,4)
 #%% Calculate RULA for all trials
