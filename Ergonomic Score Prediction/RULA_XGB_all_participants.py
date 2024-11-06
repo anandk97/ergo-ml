@@ -371,13 +371,13 @@ for i in range(1,16):
 
 df_l_stringer = pd.DataFrame(left_stringer_data,columns=['Participant ID','Accuracy','True Low Predicted Medium','True Low Predicted High','True Medium Predicted High','True Medium Predicted Low','True High Predicted Medium','True High Predicted Low'])
 df_l_stringer.to_excel(r'C:\Users\anand\Desktop\left_stringer_data.xlsx',index=False)
-df_l_camel_hump = pd.DataFrame(left_camel_hump_data,columns=['Participant ID','Accuracy','True Low Predicted Medium','True Low Predicted High','True Medium Predicted High','True Medium Predicted Low','True High Predicted Medium','True High Predicted Low'])
-df_l_camel_hump.to_excel(r'C:\Users\anand\Desktop\left_camel_hump_data.xlsx',index=False)
+# df_l_camel_hump = pd.DataFrame(left_camel_hump_data,columns=['Participant ID','Accuracy','True Low Predicted Medium','True Low Predicted High','True Medium Predicted High','True Medium Predicted Low','True High Predicted Medium','True High Predicted Low'])
+# df_l_camel_hump.to_excel(r'C:\Users\anand\Desktop\left_camel_hump_data.xlsx',index=False)
 
 df_r_stringer = pd.DataFrame(right_stringer_data,columns=['Participant ID','Accuracy','True Low Predicted Medium','True Low Predicted High','True Medium Predicted High','True Medium Predicted Low','True High Predicted Medium','True High Predicted Low'])
 df_r_stringer.to_excel(r'C:\Users\anand\Desktop\right_stringer_data.xlsx',index=False)
-df_r_camel_hump = pd.DataFrame(right_camel_hump_data,columns=['Participant ID','Accuracy','True Low Predicted Medium','True Low Predicted High','True Medium Predicted High','True Medium Predicted Low','True High Predicted Medium','True High Predicted Low'])
-df_r_camel_hump.to_excel(r'C:\Users\anand\Desktop\right_camel_hump_data.xlsx',index=False)
+# df_r_camel_hump = pd.DataFrame(right_camel_hump_data,columns=['Participant ID','Accuracy','True Low Predicted Medium','True Low Predicted High','True Medium Predicted High','True Medium Predicted Low','True High Predicted Medium','True High Predicted Low'])
+# df_r_camel_hump.to_excel(r'C:\Users\anand\Desktop\right_camel_hump_data.xlsx',index=False)
 
 
 
