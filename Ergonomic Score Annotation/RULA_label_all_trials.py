@@ -863,6 +863,7 @@ def tableC_posture_score(wrist_arm_score,neck_trunk_leg_score):
 # initial_angle = -25
 initial_angle = 0
 participant_id_range = range(1,16)
+# participant_id_range = [1,11,12]
 tool_id_range = range(1,3)
 trial_id_range = range(1,4)
 #%% Calculate RULA for all trials
@@ -873,8 +874,39 @@ for participant_id in participant_id_range:
                 print("Participant "+str(participant_id)+" Tool "+str(tool_id)+" Trial "+str(trial_id))
                 data = pd.read_csv(r"C:\Users\anand\Desktop\Hand-intensive Manufacturing Processes Dataset\Participant "+str(participant_id)+"\p"+str(participant_id)+" tool"+str(tool_id)+" trial"+str(trial_id)+"\processed bodypose.csv",header=None)
                 gonio_data = pd.read_csv(r"C:\Users\anand\Desktop\Hand-intensive Manufacturing Processes Dataset\Participant "+str(participant_id)+"\p"+str(participant_id)+" tool"+str(tool_id)+" trial"+str(trial_id)+"\processed gonio.csv",header=None)
-                file_name = r'C:\Users\anand\Desktop\RULA Labelled Data\p'+str(participant_id)+' tool'+str(tool_id)+' trial'+str(trial_id)+' w lr RULA.csv'
-                    
+                file_name = r'C:\Users\anand\Desktop\RULA Labelled Preprocessed Data\p'+str(participant_id)+' tool'+str(tool_id)+' trial'+str(trial_id)+' w lr RULA.csv'
+                
+                data_length = np.min([data.shape[0],gonio_data.shape[0]])
+                data = data.iloc[:data_length,:]
+                gonio_data = gonio_data.iloc[:data_length,:]            
+                # # Data Preprocessing
+                # stacked_joints_body = np.array(data).reshape(-1,18,3)
+
+                # #   0-Nose 1,2-LREye 3,4-LRear 5,6-LRshoulder 7,8-LRelbow 9,10-LRwrist 11,12-LRhip, 13,14-LRknee, 15,16-LRankle, 17-Midshoulder
+
+                # midshoulder = stacked_joints_body[:,17,:]
+                # nose = stacked_joints_body[:,0,:]
+                # lhip = stacked_joints_body[:,11,:]
+                # rhip = stacked_joints_body[:,12,:]
+                # midhip = (lhip+rhip)/2
+
+                # vec_nose2midshoulder = nose-midshoulder
+                # vec_xy_nose2midshoulder = vec_nose2midshoulder[:,:2]
+
+                # vec_midhip2midshoulder = midhip-midshoulder
+                # vec_xy_midhip2midshoulder = vec_midhip2midshoulder[:,:2]
+
+                # # find all the vec_xy_nose2midshoulder*vec_xy_midhip2midshoulder>0 case
+                # mul = np.sum(vec_xy_nose2midshoulder*vec_xy_midhip2midshoulder,axis=1)
+
+                # # get the indices of mul>0
+                # num_positive = np.where(mul>0)[0]
+                # # Get the indices of vec_xy_nose2midshoulder
+                # print(num_positive.shape)
+
+                # # delete the rows where vec_xy_nose2midshoulder*vec_xy_midhip2midshoulder>0
+                # data = data.drop(num_positive)
+                # gonio_data = gonio_data.drop(num_positive)
 
                 ##0-Nose 1,2-LREye 3,4-LRear 5,6-LRshoulder 7,8-LRelbow 9,
                 #10-LRwrist 11,12-LRhip, 13,14-LRknee, 15,16-LRankle, 
@@ -937,11 +969,7 @@ for participant_id in participant_id_range:
                 total_load = 15
                 leg_support = 1 # Legs are not supported
 
-                data_length = np.min([len(data[0]),len(gonio_data[0])])
-                if len(data[0]) >len(gonio_data[0]):
-                    data = data.iloc[:data_length,:]
-                else:
-                    gonio_data = gonio_data.iloc[:data_length,:]
+
                 for i in range(data_length):
                     upper_arm_score = upper_arm_score_from(l_shoulder[i,:],l_elbow[i,:])
                     # Adjustment
@@ -1038,8 +1066,37 @@ for participant_id in participant_id_range:
                 gonio_data = pd.read_csv(r"C:\Users\anand\Desktop\Hand-intensive Manufacturing Processes Dataset\Participant "+str(participant_id)+"\\tool"+str(tool_id)+" trial"+str(trial_id)+"\processed p"+str(participant_id)+" tool"+str(tool_id)+" trial"+str(trial_id)+" gonio.csv")
                 file_name = r'C:\Users\anand\Desktop\RULA Labelled Preprocessed Data\p'+str(participant_id)+' tool'+str(tool_id)+' trial'+str(trial_id)+' w lr RULA.csv'
                     
-                                    
+                data_length = np.min([data.shape[0],gonio_data.shape[0]])
+                data = data.iloc[:data_length,:]
+                gonio_data = gonio_data.iloc[:data_length,:]            
+                # Data Preprocessing
+                # stacked_joints_body = np.array(data).reshape(-1,18,3)
 
+                # #   0-Nose 1,2-LREye 3,4-LRear 5,6-LRshoulder 7,8-LRelbow 9,10-LRwrist 11,12-LRhip, 13,14-LRknee, 15,16-LRankle, 17-Midshoulder
+
+                # midshoulder = stacked_joints_body[:,17,:]
+                # nose = stacked_joints_body[:,0,:]
+                # lhip = stacked_joints_body[:,11,:]
+                # rhip = stacked_joints_body[:,12,:]
+                # midhip = (lhip+rhip)/2
+
+                # vec_nose2midshoulder = nose-midshoulder
+                # vec_xy_nose2midshoulder = vec_nose2midshoulder[:,:2]
+
+                # vec_midhip2midshoulder = midhip-midshoulder
+                # vec_xy_midhip2midshoulder = vec_midhip2midshoulder[:,:2]
+
+                # # find all the vec_xy_nose2midshoulder*vec_xy_midhip2midshoulder>0 case
+                # mul = np.sum(vec_xy_nose2midshoulder*vec_xy_midhip2midshoulder,axis=1)
+
+                # # get the indices of mul>0
+                # num_positive = np.where(mul>0)[0]
+                # # Get the indices of vec_xy_nose2midshoulder
+                # print(num_positive.shape)
+
+                # # delete the rows where vec_xy_nose2midshoulder*vec_xy_midhip2midshoulder>0
+                # data = data.drop(num_positive)
+                # gonio_data = gonio_data.drop(num_positive)
                 ##0-Nose 1,2-LREye 3,4-LRear 5,6-LRshoulder 7,8-LRelbow 9,
                 #10-LRwrist 11,12-LRhip, 13,14-LRknee, 15,16-LRankle, 
                 #17-Midshoulder # ForeArm,hand,FingerBase,Thumb123,
@@ -1101,38 +1158,10 @@ for participant_id in participant_id_range:
                 total_load = 15
                 leg_support = 1 # Legs are not supported
 
-                data_length = np.min([data.shape[0],gonio_data.shape[0]])
-                data = data.iloc[:data_length,:]
-                gonio_data = gonio_data.iloc[:data_length,:]
+                
 
-                # Data Preprocessing
-                # stacked_joints_body = data.reshape(-1,18,3)
+                
 
-                # #   0-Nose 1,2-LREye 3,4-LRear 5,6-LRshoulder 7,8-LRelbow 9,10-LRwrist 11,12-LRhip, 13,14-LRknee, 15,16-LRankle, 17-Midshoulder
-
-                # midshoulder = stacked_joints_body[:,17,:]
-                # nose = stacked_joints_body[:,0,:]
-                # lhip = stacked_joints_body[:,11,:]
-                # rhip = stacked_joints_body[:,12,:]
-                # midhip = (lhip+rhip)/2
-
-                # vec_nose2midshoulder = nose-midshoulder
-                # vec_xy_nose2midshoulder = vec_nose2midshoulder[:,:2]
-
-                # vec_midhip2midshoulder = midhip-midshoulder
-                # vec_xy_midhip2midshoulder = vec_midhip2midshoulder[:,:2]
-
-                # # find all the vec_xy_nose2midshoulder*vec_xy_midhip2midshoulder>0 case
-                # mul = np.sum(vec_xy_nose2midshoulder*vec_xy_midhip2midshoulder,axis=1)
-
-                # # get the number of positive mul
-                # num_positive = np.sum(mul>0)
-               
-                # # compute the percentage of positive mul
-                # percentage_positive = num_positive/len(mul)
-                #  # Delete num_positive indices from the data
-                # data = data.drop(data.index[:num_positive])
-                # gonio_data = gonio_data.drop(gonio_data.index[:num_positive])
                 for i in range(data_length):
                     upper_arm_score = upper_arm_score_from(l_shoulder[i,:],l_elbow[i,:])
                     # Adjustment

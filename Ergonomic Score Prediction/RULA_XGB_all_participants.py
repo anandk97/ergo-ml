@@ -108,11 +108,14 @@ right_stringer_data = np.zeros((15,8))
 right_camel_hump_data = np.zeros((15,8))
 left_stringer_data = np.zeros((15,8))
 left_camel_hump_data = np.zeros((15,8))
-for i in range(1,16):
+for i in [1,11,12]:#range(1,16):
     train_data_tool1 = pd.DataFrame()
     train_data_tool2 = pd.DataFrame()
     for j in range(1,16):
-        os.chdir(r"C:\Users\anand\Desktop\RULA Labelled Data")
+        if j == 1 or j==11 or j==12:
+            os.chdir(r"C:\Users\anand\Desktop\RULA Labelled Preprocessed Data")
+        else:
+            os.chdir(r"C:\Users\anand\Desktop\RULA Labelled Data")
         extension = 'csv'
         if j==i:
             # Indices of tool split are 1-44016, 2-44442, 3-36380, 4-50676,5-50421,6-46612,7-48997
