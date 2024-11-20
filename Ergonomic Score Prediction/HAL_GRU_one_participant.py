@@ -121,11 +121,15 @@ number_layers = 3
 torch.manual_seed(0)
 model = HAL_GRU(input_size=6, hidden_size=hidden_layer_size, num_layers=number_layers, output_size=1,midlayer_size=mid_layer_size, dropout=drop_out)
 # Try more layers, 3 onwards
-start_time = time.time()
-trainer.fit(model, left_train_loader, left_test_loader)
-print(f"Time taken: {time.time() - start_time}\n")
+# start_time = time.time()
+# trainer.fit(model, left_train_loader, left_test_loader)
+# print(f"Time taken: {time.time() - start_time}\n")
+# print all the details of the model
+# model structure, batch size, optimizer, loss function, learning rate, number of epochs, early stopping, etc.
+print(model)
+
 # Save the trained model
-torch.save(model.state_dict(), 'C:\Users\anand\Desktop\Saved HAL Models\HAL_GRU_test_'+str(test_participant_id)+'.pt')
+# torch.save(model.state_dict(), 'C:\Users\anand\Desktop\Saved HAL Models\HAL_GRU_test_'+str(test_participant_id)+'.pt')
 #%% Risk scores
 left_stringer = np.zeros((1,8))
 l_accurate = 0
